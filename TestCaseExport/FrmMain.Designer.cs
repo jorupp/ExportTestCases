@@ -99,7 +99,7 @@
             this.lblTestSuite.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTestSuite.Location = new System.Drawing.Point(6, 138);
             this.lblTestSuite.Name = "lblTestSuite";
-            this.lblTestSuite.Size = new System.Drawing.Size(67, 17);
+            this.lblTestSuite.Size = new System.Drawing.Size(66, 17);
             this.lblTestSuite.TabIndex = 0;
             this.lblTestSuite.Text = "Test Suite:";
             // 
@@ -120,7 +120,7 @@
             this.lblTestPlan.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTestPlan.Location = new System.Drawing.Point(6, 79);
             this.lblTestPlan.Name = "lblTestPlan";
-            this.lblTestPlan.Size = new System.Drawing.Size(63, 17);
+            this.lblTestPlan.Size = new System.Drawing.Size(62, 17);
             this.lblTestPlan.TabIndex = 0;
             this.lblTestPlan.Text = "Test Plan:";
             // 
@@ -136,9 +136,7 @@
             // 
             // txtTeamProject
             // 
-            this.txtTeamProject.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.txtTeamProject.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTeamProject.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.txtTeamProject.Location = new System.Drawing.Point(11, 43);
             this.txtTeamProject.Name = "txtTeamProject";
             this.txtTeamProject.ReadOnly = true;
@@ -151,7 +149,7 @@
             this.lblTeamProject.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTeamProject.Location = new System.Drawing.Point(6, 21);
             this.lblTeamProject.Name = "lblTeamProject";
-            this.lblTeamProject.Size = new System.Drawing.Size(88, 17);
+            this.lblTeamProject.Size = new System.Drawing.Size(87, 17);
             this.lblTeamProject.TabIndex = 0;
             this.lblTeamProject.Text = "Team-Project:";
             // 
@@ -172,7 +170,6 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.txtFileName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFileName.Location = new System.Drawing.Point(11, 95);
             this.txtFileName.Name = "txtFileName";
@@ -202,9 +199,7 @@
             // 
             // txtSaveFolder
             // 
-            this.txtSaveFolder.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.txtSaveFolder.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSaveFolder.ForeColor = System.Drawing.SystemColors.InactiveCaption;
             this.txtSaveFolder.Location = new System.Drawing.Point(11, 42);
             this.txtSaveFolder.Name = "txtSaveFolder";
             this.txtSaveFolder.ReadOnly = true;
@@ -261,7 +256,7 @@
             this.lblWelcomeMessage.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWelcomeMessage.Location = new System.Drawing.Point(6, 18);
             this.lblWelcomeMessage.Name = "lblWelcomeMessage";
-            this.lblWelcomeMessage.Size = new System.Drawing.Size(502, 102);
+            this.lblWelcomeMessage.Size = new System.Drawing.Size(501, 102);
             this.lblWelcomeMessage.TabIndex = 4;
             this.lblWelcomeMessage.Text = resources.GetString("lblWelcomeMessage.Text");
             // 

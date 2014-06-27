@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.TestManagement.Client;
@@ -75,12 +76,12 @@ namespace TestCaseExport
             foreach (ITestSuiteEntry suite_entry in Suites)
             {
                 this.suite = suite_entry;
-                IStaticTestSuite newSuite = suite_entry.TestSuite as IStaticTestSuite;
+                var newSuite = suite_entry.TestSuite;
                 comBoxTestSuite.Items.Add(newSuite.Title);
             }
         }
 
-        private void Get_TestCases(IStaticTestSuite testSuite)
+        private void Get_TestCases(ITestSuiteBase testSuite)
         {
             this.testCases = testSuite.AllTestCases;
         }
@@ -120,7 +121,7 @@ namespace TestCaseExport
             {
                 j = comBoxTestSuite.SelectedIndex;
                 this.suite = testSuites[j].TestSuite.TestSuiteEntry;
-                IStaticTestSuite suite1 = suite.TestSuite as IStaticTestSuite;
+                var suite1 = suite.TestSuite;
                 Get_TestCases(suite1);
                 flag3 = 1;
             }
@@ -185,18 +186,15 @@ namespace TestCaseExport
 
                     upperBound += row;
                     TestActionCollection testActions = testCase.Actions;
-                    foreach (ITestStep testStep in testActions)
+                    foreach (var testAction in testActions)
                     {
-                        col = 2;
-                        xlWorkSheet.Cells[row, 2] = testStep.Title.ToString();
-                        xlWorkSheet.Cells[row, 4] = testStep.ExpectedResult.ToString();
-                        row++;
+                        AddSteps(xlWorkSheet, testAction, ref row);
                     }
                     lowerBound += (row - 1);
                     xlWorkSheet.get_Range(upperBound, lowerBound).Merge(false);
 
                     chartRange = xlWorkSheet.get_Range(upperBound, lowerBound);
-                    chartRange.FormulaR1C1 = testCase.Title.ToString();
+                    chartRange.FormulaR1C1 = CleanupText(testCase.Title.ToString());
                     chartRange.HorizontalAlignment = 3;
                     chartRange.VerticalAlignment = 1;
 
@@ -262,6 +260,43 @@ namespace TestCaseExport
                 MessageBox.Show("All fields are not populated.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        private void AddSteps(Excel.Worksheet xlWorkSheet, ITestAction testAction, ref int row)
+        {
+            var testStep = testAction as ITestStep;
+            var group = testAction as ITestActionGroup;
+            var sharedRef = testAction as ISharedStepReference;
+            if (null != testStep)
+            {
+                xlWorkSheet.Cells[row, 2] = CleanupText(testStep.Title.ToString());
+                xlWorkSheet.Cells[row, 4] = CleanupText(testStep.ExpectedResult.ToString());
+            }
+            else if(null != group)
+            {
+                foreach (var action in group.Actions)
+                {
+                    AddSteps(xlWorkSheet, action, ref row);
+                }
+            }
+            else if (null != sharedRef)
+            {
+                var step = sharedRef.FindSharedStep();
+                foreach (var action in step.Actions)
+                {
+                    AddSteps(xlWorkSheet, action, ref row);
+                }
+            }
+            row++;
+        }
+
+        private static readonly Regex _tag = new Regex("</?([A-Z][A-Z0-9]*)[^>]*>");
+        private string CleanupText(string input)
+        {
+            input = input.Replace("</P><P>", Environment.NewLine);
+            input = _tag.Replace(input, "");
+            return input;
+        }
+
         private void releaseObject(object obj)
         {
             try

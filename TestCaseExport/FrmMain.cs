@@ -203,11 +203,14 @@ namespace TestCaseExport
                     {
                         AddSteps(sheet, testAction, ref row);
                     }
-                    var merged = sheet.Cells[firstRow, 1, row - 1, 1];
-                    merged.Merge = true;
-                    merged.Value = CleanupText(testCase.Title);
-                    merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                    if (firstRow != row)
+                    {
+                        var merged = sheet.Cells[firstRow, 1, row - 1, 1];
+                        merged.Merge = true;
+                        merged.Value = CleanupText(testCase.Title);
+                        merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                    }
                 }
 
                 var header = sheet.Cells[1, 1, 1, 7];

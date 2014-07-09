@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.TeamFoundation.TestManagement.Client;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -53,7 +51,7 @@ namespace TestCaseExport
                         {
                             var merged = sheet.Cells[firstRow, 1, row - 1, 1];
                             merged.Merge = true;
-                            merged.Value = CleanupText(testCase.Title, replacements);
+                            CleanupText(merged, testCase.Title, replacements);
                             merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                             merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
                         }
@@ -93,8 +91,8 @@ namespace TestCaseExport
             var sharedRef = testAction as ISharedStepReference;
             if (null != testStep)
             {
-                xlWorkSheet.Cells[row, 2].Value = CleanupText(testStep.Title.ToString(), replacements);
-                xlWorkSheet.Cells[row, 4].Value = CleanupText(testStep.ExpectedResult.ToString(), replacements);
+                CleanupText(xlWorkSheet.Cells[row, 2], testStep.Title.ToString(), replacements);
+                CleanupText(xlWorkSheet.Cells[row, 4], testStep.ExpectedResult.ToString(), replacements);
             }
             else if (null != group)
             {
@@ -114,17 +112,14 @@ namespace TestCaseExport
             row++;
         }
 
-        private static readonly Regex _tag = new Regex("</?([A-Z][A-Z0-9]*)[^>]*>");
-        private string CleanupText(string input, Dictionary<string, string> replacements)
+        private void CleanupText(ExcelRangeBase cell, string input, Dictionary<string, string> replacements)
         {
             foreach (var kvp in replacements)
             {
                 input = input.Replace("@" + kvp.Key, kvp.Value);
             }
 
-            input = input.Replace("</P><P>", Environment.NewLine);
-            input = _tag.Replace(input, "");
-            return input;
+            new HtmlToRichTextHelper().HtmlToRichText(cell, input);
         }
     }
 }

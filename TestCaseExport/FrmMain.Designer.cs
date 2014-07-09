@@ -91,9 +91,9 @@
             // 
             // comBoxTestSuite
             // 
-            this.comBoxTestSuite.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bsData, "SelectedTestSuite", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comBoxTestSuite.DataSource = this.testSuitesBindingSource;
             this.comBoxTestSuite.DisplayMember = "Title";
+            this.comBoxTestSuite.ValueMember = "Title";
             this.comBoxTestSuite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comBoxTestSuite.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comBoxTestSuite.FormattingEnabled = true;
@@ -124,9 +124,9 @@
             // 
             // comBoxTestPlan
             // 
-            this.comBoxTestPlan.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bsData, "SelectedTestPlan", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comBoxTestPlan.DataSource = this.testPlansBindingSource;
             this.comBoxTestPlan.DisplayMember = "Name";
+            this.comBoxTestPlan.ValueMember = "Name";
             this.comBoxTestPlan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comBoxTestPlan.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comBoxTestPlan.FormattingEnabled = true;

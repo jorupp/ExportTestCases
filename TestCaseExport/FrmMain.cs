@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -27,7 +28,6 @@ namespace TestCaseExport
 
             this.Load += async (sender, args) =>
             {
-                return;
                 try
                 {
                     _data.LoadFromSettings(Settings.Default);
@@ -36,6 +36,27 @@ namespace TestCaseExport
                 {
                     MessageBox.Show("Error loading settings:" + Environment.NewLine + ex, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            };
+
+            _data.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "SelectedTestPlan")
+                {
+                    this.comBoxTestPlan.SelectedItem = _data.SelectedTestPlan;
+                }
+                if (args.PropertyName == "SelectedTestSuite")
+                {
+                    this.comBoxTestSuite.SelectedItem = _data.SelectedTestSuite;
+                }
+            };
+
+            this.comBoxTestPlan.SelectedIndexChanged += (sender, args) =>
+            {
+                _data.SelectedTestPlan = this.comBoxTestPlan.SelectedItem as ITestPlan;
+            };
+            this.comBoxTestSuite.SelectedIndexChanged += (sender, args) =>
+            {
+                _data.SelectedTestSuite = this.comBoxTestSuite.SelectedItem as Data.SelectableTestSuite;
             };
         }
 

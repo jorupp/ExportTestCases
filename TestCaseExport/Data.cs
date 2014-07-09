@@ -17,6 +17,8 @@ namespace TestCaseExport
 {
     public class Data : INotifyPropertyChanged
     {
+        private List<Task> _pendingTasks = new List<Task>();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -52,16 +54,24 @@ namespace TestCaseExport
                 OnPropertyChanged("SelectedProjectName");
 
                 // reload the list of test plans (on background thread)
-                OnIsBusy(true);
-                TestPlans.Clear();
                 if (null != _selectedProject)
                 {
-                    Task.Run(() => _selectedProject.TestPlans.Query("select * from TestPlan").ToList()).ContinueWith(
+                    OnIsBusy(true);
+                    Task task = null;
+                    task = Task.Run(() => _selectedProject.TestPlans.Query("select * from TestPlan").ToList()).ContinueWith(
                         data =>
                         {
+                            TestPlans.Clear();
                             data.Result.ForEach(TestPlans.Add);
+                            SelectedTestPlan = TestPlans.FirstOrDefault();
+                            _pendingTasks.Remove(task);
                             OnIsBusy(false);
                         }, TaskScheduler.FromCurrentSynchronizationContext());
+                    _pendingTasks.Add(task);
+                }
+                else
+                {
+                    TestPlans.Clear();
                 }
             }
         }
@@ -86,16 +96,24 @@ namespace TestCaseExport
                 OnPropertyChanged();
 
                 // reload the list of test suites (on background thread)
-                OnIsBusy(true);
-                TestSuites.Clear();
                 if (null != _selectedTestPlan)
                 {
-                    Task.Run(() => _selectedTestPlan.RootSuite.Entries.Where(i => i.TestSuite != null).Select(i => new SelectableTestSuite(i.TestSuite)).ToList()).ContinueWith(
+                    OnIsBusy(true);
+                    Task task = null;
+                    task = Task.Run(() => _selectedTestPlan.RootSuite.Entries.Where(i => i.TestSuite != null).Select(i => new SelectableTestSuite(i.TestSuite)).ToList()).ContinueWith(
                         data =>
                         {
+                            TestSuites.Clear();
                             data.Result.ForEach(TestSuites.Add);
+                            SelectedTestSuite = TestSuites.FirstOrDefault();
                             OnIsBusy(false);
+                            _pendingTasks.Remove(task);
                         }, TaskScheduler.FromCurrentSynchronizationContext());
+                    _pendingTasks.Add(task);
+                }
+                else
+                {
+                    TestSuites.Clear();
                 }
             }
         }
@@ -151,14 +169,16 @@ namespace TestCaseExport
             var tfs = new TfsTeamProjectCollection(new Uri(settings.TfsUrl));
             SelectedProject = tfs.GetService<ITestManagementService>().GetTeamProject(settings.ProjectName);
 
-            Application.DoEvents();
+            while(_pendingTasks.Count > 0)
+                Application.DoEvents();
 
             if (string.IsNullOrEmpty(settings.TestPlan))
                 return;
 
             SelectedTestPlan = TestPlans.SingleOrDefault(i => i.Name == settings.TestPlan);
 
-            Application.DoEvents();
+            while (_pendingTasks.Count > 0)
+                Application.DoEvents();
 
             if (string.IsNullOrEmpty(settings.TestSuite))
                 return;

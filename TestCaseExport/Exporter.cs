@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -40,18 +41,22 @@ namespace TestCaseExport
                 int row = 2;
                 foreach (var testCase in testSuite.TestCases.Select(i => i.TestCase))
                 {
-                    var firstRow = row;
-                    foreach (var testAction in testCase.Actions)
+                    var replacementSets = GetReplacementSets(testCase);
+                    foreach (var replacements in replacementSets)
                     {
-                        AddSteps(sheet, testAction, ref row);
-                    }
-                    if (firstRow != row)
-                    {
-                        var merged = sheet.Cells[firstRow, 1, row - 1, 1];
-                        merged.Merge = true;
-                        merged.Value = CleanupText(testCase.Title);
-                        merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                        merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                        var firstRow = row;
+                        foreach (var testAction in testCase.Actions)
+                        {
+                            AddSteps(sheet, testAction, replacements, ref row);
+                        }
+                        if (firstRow != row)
+                        {
+                            var merged = sheet.Cells[firstRow, 1, row - 1, 1];
+                            merged.Merge = true;
+                            merged.Value = CleanupText(testCase.Title, replacements);
+                            merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                        }
                     }
                 }
 
@@ -66,21 +71,36 @@ namespace TestCaseExport
             }
         }
 
-        private void AddSteps(ExcelWorksheet xlWorkSheet, ITestAction testAction, ref int row)
+        private List<Dictionary<string, string>> GetReplacementSets(ITestCase testCase)
+        {
+            var replacementSets = new List<Dictionary<string, string>>();
+            foreach (DataRow r in testCase.DefaultTableReadOnly.Rows)
+            {
+                var replacement = new Dictionary<string, string>();
+                foreach (DataColumn c in testCase.DefaultTableReadOnly.Columns)
+                {
+                    replacement[c.ColumnName] = r[c] as string;
+                }
+                replacementSets.Add(replacement);
+            }
+            return replacementSets.DefaultIfEmpty(new Dictionary<string, string>()).ToList();
+        }
+
+        private void AddSteps(ExcelWorksheet xlWorkSheet, ITestAction testAction, Dictionary<string, string> replacements, ref int row)
         {
             var testStep = testAction as ITestStep;
             var group = testAction as ITestActionGroup;
             var sharedRef = testAction as ISharedStepReference;
             if (null != testStep)
             {
-                xlWorkSheet.Cells[row, 2].Value = CleanupText(testStep.Title.ToString());
-                xlWorkSheet.Cells[row, 4].Value = CleanupText(testStep.ExpectedResult.ToString());
+                xlWorkSheet.Cells[row, 2].Value = CleanupText(testStep.Title.ToString(), replacements);
+                xlWorkSheet.Cells[row, 4].Value = CleanupText(testStep.ExpectedResult.ToString(), replacements);
             }
             else if (null != group)
             {
                 foreach (var action in group.Actions)
                 {
-                    AddSteps(xlWorkSheet, action, ref row);
+                    AddSteps(xlWorkSheet, action, replacements, ref row);
                 }
             }
             else if (null != sharedRef)
@@ -88,15 +108,20 @@ namespace TestCaseExport
                 var step = sharedRef.FindSharedStep();
                 foreach (var action in step.Actions)
                 {
-                    AddSteps(xlWorkSheet, action, ref row);
+                    AddSteps(xlWorkSheet, action, replacements, ref row);
                 }
             }
             row++;
         }
 
         private static readonly Regex _tag = new Regex("</?([A-Z][A-Z0-9]*)[^>]*>");
-        private string CleanupText(string input)
+        private string CleanupText(string input, Dictionary<string, string> replacements)
         {
+            foreach (var kvp in replacements)
+            {
+                input = input.Replace("@" + kvp.Key, kvp.Value);
+            }
+
             input = input.Replace("</P><P>", Environment.NewLine);
             input = _tag.Replace(input, "");
             return input;

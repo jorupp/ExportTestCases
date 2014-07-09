@@ -36,7 +36,7 @@ namespace TestCaseExport
         private ITestPlan _selectedTestPlan;
         private BindingList<SelectableTestSuite> _testSuites = new BindingList<SelectableTestSuite>();
         private SelectableTestSuite _selectedTestSuite;
-        private bool _suiteIsSelected;
+        private string _exportFileName;
 
         public ITestManagementTeamProject SelectedProject
         {
@@ -114,9 +114,21 @@ namespace TestCaseExport
             }
         }
 
+        public string ExportFileName
+        {
+            get { return _exportFileName; }
+            set
+            {
+                if (value == _exportFileName) return;
+                _exportFileName = value;
+                OnPropertyChanged();
+                OnPropertyChanged("SuiteIsSelected");
+            }
+        }
+
         public bool SuiteIsSelected
         {
-            get { return null != _selectedTestSuite; }
+            get { return null != _selectedTestSuite && !string.IsNullOrEmpty(ExportFileName); }
         }
 
         public class SelectableTestSuite

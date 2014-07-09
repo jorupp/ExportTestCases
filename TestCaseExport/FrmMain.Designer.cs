@@ -43,17 +43,15 @@
             this.txtTeamProject = new System.Windows.Forms.TextBox();
             this.lblTeamProject = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.txtFileName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnFolderBrowse = new System.Windows.Forms.Button();
-            this.txtSaveFolder = new System.Windows.Forms.TextBox();
+            this.txtSaveFile = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lblWelcomeMessage = new System.Windows.Forms.Label();
             this.btnAbout = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsData)).BeginInit();
@@ -65,10 +63,12 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(10, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(235, 491);
+            this.pictureBox1.Size = new System.Drawing.Size(235, 495);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -82,7 +82,7 @@
             this.groupBox1.Controls.Add(this.txtTeamProject);
             this.groupBox1.Controls.Add(this.lblTeamProject);
             this.groupBox1.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(260, 142);
+            this.groupBox1.Location = new System.Drawing.Point(260, 164);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(529, 195);
             this.groupBox1.TabIndex = 0;
@@ -182,36 +182,16 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.txtFileName);
-            this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.btnFolderBrowse);
-            this.groupBox2.Controls.Add(this.txtSaveFolder);
+            this.groupBox2.Controls.Add(this.txtSaveFile);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(260, 342);
+            this.groupBox2.Location = new System.Drawing.Point(260, 374);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(529, 130);
+            this.groupBox2.Size = new System.Drawing.Size(529, 82);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Destination";
-            // 
-            // txtFileName
-            // 
-            this.txtFileName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFileName.Location = new System.Drawing.Point(11, 95);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(411, 24);
-            this.txtFileName.TabIndex = 5;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(156, 17);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Specify Name of Excel File:";
             // 
             // btnFolderBrowse
             // 
@@ -224,14 +204,15 @@
             this.btnFolderBrowse.UseVisualStyleBackColor = true;
             this.btnFolderBrowse.Click += new System.EventHandler(this.btnFolderBrowse_Click);
             // 
-            // txtSaveFolder
+            // txtSaveFile
             // 
-            this.txtSaveFolder.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSaveFolder.Location = new System.Drawing.Point(11, 42);
-            this.txtSaveFolder.Name = "txtSaveFolder";
-            this.txtSaveFolder.ReadOnly = true;
-            this.txtSaveFolder.Size = new System.Drawing.Size(411, 24);
-            this.txtSaveFolder.TabIndex = 7;
+            this.txtSaveFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bsData, "ExportFileName", true));
+            this.txtSaveFile.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSaveFile.Location = new System.Drawing.Point(11, 42);
+            this.txtSaveFile.Name = "txtSaveFile";
+            this.txtSaveFile.ReadOnly = true;
+            this.txtSaveFile.Size = new System.Drawing.Size(411, 24);
+            this.txtSaveFile.TabIndex = 7;
             // 
             // label1
             // 
@@ -239,15 +220,16 @@
             this.label1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(235, 17);
+            this.label1.Size = new System.Drawing.Size(206, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Specify Location to Save Exported Script:";
+            this.label1.Text = "Specify File to Save Exported Script:";
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(707, 478);
+            this.btnCancel.Location = new System.Drawing.Point(707, 482);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(82, 25);
             this.btnCancel.TabIndex = 7;
@@ -257,9 +239,10 @@
             // 
             // btnExport
             // 
+            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExport.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bsData, "SuiteIsSelected", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.btnExport.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExport.Location = new System.Drawing.Point(617, 478);
+            this.btnExport.Location = new System.Drawing.Point(617, 482);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(82, 25);
             this.btnExport.TabIndex = 6;
@@ -290,14 +273,21 @@
             // 
             // btnAbout
             // 
+            this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAbout.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbout.Location = new System.Drawing.Point(260, 478);
+            this.btnAbout.Location = new System.Drawing.Point(260, 482);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(82, 25);
             this.btnAbout.TabIndex = 8;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "xlsx";
+            this.saveFileDialog.Filter = "Excel files|*.xlsx";
+            this.saveFileDialog.SupportMultiDottedExtensions = true;
             // 
             // FrmMain
             // 
@@ -306,7 +296,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(801, 514);
+            this.ClientSize = new System.Drawing.Size(801, 518);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnExport);
@@ -347,12 +337,9 @@
         private System.Windows.Forms.TextBox txtTeamProject;
         private System.Windows.Forms.Label lblTeamProject;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox txtFileName;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnFolderBrowse;
-        private System.Windows.Forms.TextBox txtSaveFolder;
+        private System.Windows.Forms.TextBox txtSaveFile;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -361,6 +348,7 @@
         private System.Windows.Forms.BindingSource bsData;
         private System.Windows.Forms.BindingSource testPlansBindingSource;
         private System.Windows.Forms.BindingSource testSuitesBindingSource;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

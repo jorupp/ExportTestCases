@@ -354,9 +354,6 @@
   <metadata name="testPlansBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>269, 17</value>
   </metadata>
-  <metadata name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="lblWelcomeMessage.Text" xml:space="preserve">
     <value>This tool enables you to export Test Cases present in form of work item(s) in TFS to excel.
 
@@ -365,6 +362,9 @@
 
 -Specify Location and Name for Excel file.</value>
   </data>
+  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>631, 17</value>
+  </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABABAAEBAQAAAAAAAoAQAABgEAABgYEAAAAAAA6AEAAC4CAAAgIBAAAAAAAOgCAAAWBAAAMDAQAAAA

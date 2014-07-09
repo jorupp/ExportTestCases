@@ -44,8 +44,10 @@ namespace TestCaseExport
 
         private void btnFolderBrowse_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog.ShowDialog();
-            txtSaveFolder.Text = folderBrowserDialog.SelectedPath;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _data.ExportFileName = saveFileDialog.FileName;
+            }
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -53,13 +55,25 @@ namespace TestCaseExport
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
 
-            var filename = Path.Combine(txtSaveFolder.Text, txtFileName.Text + ".xlsx");
-            new Exporter().Export(filename, _data.SelectedTestSuite.TestSuite);
-            Process.Start(filename);
+            try
+            {
+                var filename = _data.ExportFileName;
+                new Exporter().Export(filename, _data.SelectedTestSuite.TestSuite);
+                Process.Start(filename);
 
-            this.Cursor = Cursors.Default;
-            this.Enabled = true;
-            MessageBox.Show("Test Cases exported successfully to specified file.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                this.Cursor = Cursors.Default;
+                this.Enabled = true;
+                MessageBox.Show("Test Cases exported successfully to specified file.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to export:" + Environment.NewLine + ex, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                this.Enabled = true;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

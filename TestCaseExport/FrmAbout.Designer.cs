@@ -53,7 +53,7 @@
             this.label1.Location = new System.Drawing.Point(85, 6);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(177, 38);
+            this.label1.Size = new System.Drawing.Size(176, 38);
             this.label1.TabIndex = 1;
             this.label1.Text = "Test Case Export to Excel\r\nBeta Version";
             // 
@@ -61,17 +61,19 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(84, 72);
+            this.label2.Location = new System.Drawing.Point(84, 60);
             this.label2.Name = "label2";
             this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label2.Size = new System.Drawing.Size(177, 30);
+            this.label2.Size = new System.Drawing.Size(176, 75);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Developed By: Raghav Ranjan\r\nraghav.ranjan@accenture.com";
+            this.label2.Text = "Developed By: Raghav Ranjan\r\nraghav.ranjan@accenture.com\r\n\r\nModified By: Jonathan" +
+    " Rupp\r\njrupp@rightpoint.com";
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(185, 105);
+            this.btnOK.Location = new System.Drawing.Point(185, 145);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(73, 24);
             this.btnOK.TabIndex = 3;
@@ -84,7 +86,7 @@
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(263, 136);
+            this.ClientSize = new System.Drawing.Size(263, 174);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);

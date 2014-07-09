@@ -21,7 +21,7 @@ namespace TestCaseExport
             bsData.DataSource = _data;
             _data.IsBusy += (sender, isBusy) =>
             {
-                this.Cursor = isBusy ? Cursors.WaitCursor : Cursors.Default;
+                this.UseWaitCursor = isBusy;
             };
         }
 

@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.TestManagement.Client;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
 
 namespace TestCaseExport
 {
     public partial class FrmMain : Form
     {
-        private ITestPlanCollection _testPlans;
-        private ITestSuiteEntryCollection _testSuites;
-        private ITestCaseCollection testCases;
+        private Data _data = new Data();
         
         private delegate void Execute();
 
         public FrmMain()
         {
             InitializeComponent();
+
+            bsData.DataSource = _data;
+            _data.IsBusy += (sender, isBusy) =>
+            {
+                this.Cursor = isBusy ? Cursors.WaitCursor : Cursors.Default;
+            };
         }
 
         private void btnTeamProject_Click(object sender, EventArgs e)
@@ -37,56 +38,7 @@ namespace TestCaseExport
                 var tstSvc = (ITestManagementService)tfs.GetService(typeof(ITestManagementService));
                 var teamProject = tstSvc.GetTeamProject(tpp.SelectedProjects[0].Name);
 
-                //Populating the text field Team Project name (txtTeamProject) with the name of the selected team project.
-                txtTeamProject.Text = tpp.SelectedProjects[0].Name;
-
-                //Call to method "Get_TestPlans" to get the test plans in the selected team project
-                LoadTestPlans(teamProject);
-            }
-
-        }
-
-        private void LoadTestPlans(ITestManagementTeamProject teamProject)
-        {
-            //Getting all the test plans in the collection "plans" using the query.
-            this._testPlans = teamProject.TestPlans.Query("Select * From TestPlan");
-            comBoxTestPlan.Items.Clear();
-            comBoxTestSuite.Items.Clear();
-            foreach (var plan in _testPlans)
-            {
-                //Populating the plan selection dropdown list with the name of Test Plans in the selected team project.
-                comBoxTestPlan.Items.Add(plan.Name);
-            }
-        }
-
-        private void LoadTestSuites(ITestSuiteEntryCollection Suites)
-        {
-            foreach (ITestSuiteEntry suite_entry in Suites)
-            {
-                var newSuite = suite_entry.TestSuite;
-                comBoxTestSuite.Items.Add(newSuite.Title);
-            }
-        }
-
-        private void LoadTestCases(ITestSuiteBase testSuite)
-        {
-            this.testCases = testSuite.AllTestCases;
-        }
-
-
-        //Following method is invoked whenever a Test Plan is selected in the dropdown list.
-        //Acording to the selected Test Plan in the dropdown list the Test Suites present in the selected Test Plan are populated in the Test Suite selection dropdown.
-        private void comBoxTestPlan_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.WaitCursor;
-            comBoxTestSuite.Items.Clear();
-            int i = -1;
-            if (comBoxTestPlan.SelectedIndex >= 0)
-            {
-                i = comBoxTestPlan.SelectedIndex;
-                this._testSuites = _testPlans[i].RootSuite.Entries;
-                LoadTestSuites(_testSuites);
-                this.Cursor = Cursors.Arrow;
+                _data.SelectedProject = teamProject;
             }
         }
 
@@ -96,138 +48,18 @@ namespace TestCaseExport
             txtSaveFolder.Text = folderBrowserDialog.SelectedPath;
         }
 
-        private void comBoxTestSuite_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int j = -1;
-            if (comBoxTestPlan.SelectedIndex >= 0)
-            {
-                j = comBoxTestSuite.SelectedIndex;
-                var suite = _testSuites[j].TestSuite.TestSuiteEntry;
-                var suite1 = suite.TestSuite;
-                LoadTestCases(suite1);
-            }
-        }
-
         private void btnExport_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
-            btnExport.Enabled = false;
-            btnCancel.Enabled = false;
-            btnTeamProject.Enabled = false;
-            btnFolderBrowse.Enabled = false;
-            comBoxTestPlan.Enabled = false;
-            comBoxTestSuite.Enabled = false;
+            this.Enabled = false;
 
             var filename = Path.Combine(txtSaveFolder.Text, txtFileName.Text + ".xlsx");
-            Export(filename);
+            new Exporter().Export(filename, _data.SelectedTestSuite.TestSuite);
             Process.Start(filename);
+
+            this.Cursor = Cursors.Default;
+            this.Enabled = true;
             MessageBox.Show("Test Cases exported successfully to specified file.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
-            this.Cursor = Cursors.Arrow;
-            btnExport.Enabled = true;
-            btnCancel.Enabled = true;
-            btnTeamProject.Enabled = true;
-            btnFolderBrowse.Enabled = true;
-            comBoxTestPlan.Enabled = true;
-            comBoxTestSuite.Enabled = true;
-
-            txtTeamProject.Text = "";
-            comBoxTestPlan.Items.Clear();
-            comBoxTestSuite.Items.Clear();
-
-            txtSaveFolder.Text = "";
-            txtFileName.Text = "";
-        }
-
-        private void Export(string filename)
-        {
-            using (var pkg = new ExcelPackage())
-            {
-                var sheet = pkg.Workbook.Worksheets.Add("Test Script");
-                sheet.Cells[1, 1].Value = "Test Condition";
-                sheet.Cells[1, 2].Value = "Action/Description";
-                sheet.Cells[1, 3].Value = "Input Data";
-                sheet.Cells[1, 4].Value = "Expected Result";
-                sheet.Cells[1, 5].Value = "Actual Result";
-                sheet.Cells[1, 6].Value = "Pass/Fail";
-                sheet.Cells[1, 7].Value = "Comments";
-
-                sheet.Column(1).Width = 15;
-                sheet.Column(2).Width = 50;
-                sheet.Column(3).Width = 15;
-                sheet.Column(4).Width = 50;
-                sheet.Column(5).Width = 50;
-                sheet.Column(6).Width = 15;
-                sheet.Column(7).Width = 20;
-
-
-                int row = 2;
-                foreach (var testCase in testCases)
-                {
-                    var firstRow = row;
-                    foreach (var testAction in testCase.Actions)
-                    {
-                        AddSteps(sheet, testAction, ref row);
-                    }
-                    if (firstRow != row)
-                    {
-                        var merged = sheet.Cells[firstRow, 1, row - 1, 1];
-                        merged.Merge = true;
-                        merged.Value = CleanupText(testCase.Title);
-                        merged.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                        merged.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-                    }
-                }
-
-                var header = sheet.Cells[1, 1, 1, 7];
-                header.Style.Font.Bold = true;
-                header.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                header.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 226, 238, 18));
-
-                sheet.Cells[1, 1, row, 7].Style.WrapText = true;
-
-                //chartRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium,
-                //    Excel.XlColorIndex.xlColorIndexAutomatic, Excel.XlColorIndex.xlColorIndexAutomatic);
-
-                pkg.SaveAs(new FileInfo(filename));
-            }
-            
-        }
-
-        private void AddSteps(ExcelWorksheet xlWorkSheet, ITestAction testAction, ref int row)
-        {
-            var testStep = testAction as ITestStep;
-            var group = testAction as ITestActionGroup;
-            var sharedRef = testAction as ISharedStepReference;
-            if (null != testStep)
-            {
-                xlWorkSheet.Cells[row, 2].Value = CleanupText(testStep.Title.ToString());
-                xlWorkSheet.Cells[row, 4].Value = CleanupText(testStep.ExpectedResult.ToString());
-            }
-            else if(null != group)
-            {
-                foreach (var action in group.Actions)
-                {
-                    AddSteps(xlWorkSheet, action, ref row);
-                }
-            }
-            else if (null != sharedRef)
-            {
-                var step = sharedRef.FindSharedStep();
-                foreach (var action in step.Actions)
-                {
-                    AddSteps(xlWorkSheet, action, ref row);
-                }
-            }
-            row++;
-        }
-
-        private static readonly Regex _tag = new Regex("</?([A-Z][A-Z0-9]*)[^>]*>");
-        private string CleanupText(string input)
-        {
-            input = input.Replace("</P><P>", Environment.NewLine);
-            input = _tag.Replace(input, "");
-            return input;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

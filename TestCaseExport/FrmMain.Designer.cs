@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comBoxTestSuite = new System.Windows.Forms.ComboBox();
+            this.bsData = new System.Windows.Forms.BindingSource(this.components);
+            this.testSuitesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lblTestSuite = new System.Windows.Forms.Label();
             this.comBoxTestPlan = new System.Windows.Forms.ComboBox();
+            this.testPlansBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lblTestPlan = new System.Windows.Forms.Label();
             this.btnTeamProject = new System.Windows.Forms.Button();
             this.txtTeamProject = new System.Windows.Forms.TextBox();
@@ -52,6 +56,9 @@
             this.btnAbout = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsData)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.testSuitesBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.testPlansBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -84,6 +91,9 @@
             // 
             // comBoxTestSuite
             // 
+            this.comBoxTestSuite.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bsData, "SelectedTestSuite", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.comBoxTestSuite.DataSource = this.testSuitesBindingSource;
+            this.comBoxTestSuite.DisplayMember = "Title";
             this.comBoxTestSuite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comBoxTestSuite.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comBoxTestSuite.FormattingEnabled = true;
@@ -91,7 +101,16 @@
             this.comBoxTestSuite.Name = "comBoxTestSuite";
             this.comBoxTestSuite.Size = new System.Drawing.Size(452, 23);
             this.comBoxTestSuite.TabIndex = 3;
-            this.comBoxTestSuite.SelectedIndexChanged += new System.EventHandler(this.comBoxTestSuite_SelectedIndexChanged);
+            // 
+            // bsData
+            // 
+            this.bsData.AllowNew = false;
+            this.bsData.DataSource = typeof(TestCaseExport.Data);
+            // 
+            // testSuitesBindingSource
+            // 
+            this.testSuitesBindingSource.DataMember = "TestSuites";
+            this.testSuitesBindingSource.DataSource = this.bsData;
             // 
             // lblTestSuite
             // 
@@ -105,6 +124,9 @@
             // 
             // comBoxTestPlan
             // 
+            this.comBoxTestPlan.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bsData, "SelectedTestPlan", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.comBoxTestPlan.DataSource = this.testPlansBindingSource;
+            this.comBoxTestPlan.DisplayMember = "Name";
             this.comBoxTestPlan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comBoxTestPlan.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comBoxTestPlan.FormattingEnabled = true;
@@ -112,7 +134,11 @@
             this.comBoxTestPlan.Name = "comBoxTestPlan";
             this.comBoxTestPlan.Size = new System.Drawing.Size(452, 23);
             this.comBoxTestPlan.TabIndex = 2;
-            this.comBoxTestPlan.SelectedIndexChanged += new System.EventHandler(this.comBoxTestPlan_SelectedIndexChanged);
+            // 
+            // testPlansBindingSource
+            // 
+            this.testPlansBindingSource.DataMember = "TestPlans";
+            this.testPlansBindingSource.DataSource = this.bsData;
             // 
             // lblTestPlan
             // 
@@ -136,6 +162,7 @@
             // 
             // txtTeamProject
             // 
+            this.txtTeamProject.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bsData, "SelectedProjectName", true));
             this.txtTeamProject.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTeamProject.Location = new System.Drawing.Point(11, 43);
             this.txtTeamProject.Name = "txtTeamProject";
@@ -230,6 +257,7 @@
             // 
             // btnExport
             // 
+            this.btnExport.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bsData, "SuiteIsSelected", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.btnExport.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExport.Location = new System.Drawing.Point(617, 478);
             this.btnExport.Name = "btnExport";
@@ -296,6 +324,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsData)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.testSuitesBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.testPlansBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -327,6 +358,9 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label lblWelcomeMessage;
         private System.Windows.Forms.Button btnAbout;
+        private System.Windows.Forms.BindingSource bsData;
+        private System.Windows.Forms.BindingSource testPlansBindingSource;
+        private System.Windows.Forms.BindingSource testSuitesBindingSource;
     }
 }
 

@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.TestManagement.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -19,16 +13,11 @@ namespace TestCaseExport
 {
     public partial class FrmMain : Form
     {
-        private TfsTeamProjectCollection _tfs;
-        private ITestManagementTeamProject _teamProject;
-        private ITestPlanCollection plans;
-        private ITestSuiteEntryCollection testSuites;
+        private ITestPlanCollection _testPlans;
+        private ITestSuiteEntryCollection _testSuites;
         private ITestCaseCollection testCases;
-        private ITestSuiteEntry suite;
         
         private delegate void Execute();
-
-        int flag1 = 0, flag2 = 0, flag3 = 0, flag4 = 0, flag5 = 0;
 
         public FrmMain()
         {
@@ -38,53 +27,48 @@ namespace TestCaseExport
         private void btnTeamProject_Click(object sender, EventArgs e)
         {
             //Displaying the Team Project selection dialog to select the desired team project.
-            TeamProjectPicker tpp = new TeamProjectPicker(TeamProjectPickerMode.SingleProject, false);
+            var tpp = new TeamProjectPicker(TeamProjectPickerMode.SingleProject, false);
             tpp.ShowDialog();
 
             //Following actions will be executed only if a team project is selected in the the opened dialog.
             if (tpp.SelectedTeamProjectCollection != null)
             {
-                this._tfs = tpp.SelectedTeamProjectCollection;
-                ITestManagementService test_service = (ITestManagementService)_tfs.GetService(typeof(ITestManagementService));
-                this._teamProject = test_service.GetTeamProject(tpp.SelectedProjects[0].Name);
+                var tfs = tpp.SelectedTeamProjectCollection;
+                var tstSvc = (ITestManagementService)tfs.GetService(typeof(ITestManagementService));
+                var teamProject = tstSvc.GetTeamProject(tpp.SelectedProjects[0].Name);
 
                 //Populating the text field Team Project name (txtTeamProject) with the name of the selected team project.
                 txtTeamProject.Text = tpp.SelectedProjects[0].Name;
-                flag1 = 1;
 
                 //Call to method "Get_TestPlans" to get the test plans in the selected team project
-                Get_TestPlans(_teamProject);
+                LoadTestPlans(teamProject);
             }
 
         }
 
-        private void Get_TestPlans(ITestManagementTeamProject teamProject)
+        private void LoadTestPlans(ITestManagementTeamProject teamProject)
         {
             //Getting all the test plans in the collection "plans" using the query.
-            this.plans = teamProject.TestPlans.Query("Select * From TestPlan");
+            this._testPlans = teamProject.TestPlans.Query("Select * From TestPlan");
             comBoxTestPlan.Items.Clear();
-            flag2 = 0;
             comBoxTestSuite.Items.Clear();
-            flag3 = 0;
-            foreach (ITestPlan plan in plans)
+            foreach (var plan in _testPlans)
             {
                 //Populating the plan selection dropdown list with the name of Test Plans in the selected team project.
                 comBoxTestPlan.Items.Add(plan.Name);
             }
         }
 
-        private void Get_TestSuites(ITestSuiteEntryCollection Suites)
+        private void LoadTestSuites(ITestSuiteEntryCollection Suites)
         {
-            
             foreach (ITestSuiteEntry suite_entry in Suites)
             {
-                this.suite = suite_entry;
                 var newSuite = suite_entry.TestSuite;
                 comBoxTestSuite.Items.Add(newSuite.Title);
             }
         }
 
-        private void Get_TestCases(ITestSuiteBase testSuite)
+        private void LoadTestCases(ITestSuiteBase testSuite)
         {
             this.testCases = testSuite.AllTestCases;
         }
@@ -100,10 +84,9 @@ namespace TestCaseExport
             if (comBoxTestPlan.SelectedIndex >= 0)
             {
                 i = comBoxTestPlan.SelectedIndex;
-                this.testSuites = plans[i].RootSuite.Entries;
-                Get_TestSuites(testSuites);
+                this._testSuites = _testPlans[i].RootSuite.Entries;
+                LoadTestSuites(_testSuites);
                 this.Cursor = Cursors.Arrow;
-                flag2 = 1;
             }
         }
 
@@ -111,10 +94,6 @@ namespace TestCaseExport
         {
             folderBrowserDialog.ShowDialog();
             txtSaveFolder.Text = folderBrowserDialog.SelectedPath;
-            if (txtSaveFolder.Text != null || txtSaveFolder.Text != "")
-            {
-                flag4 = 1;
-            }
         }
 
         private void comBoxTestSuite_SelectedIndexChanged(object sender, EventArgs e)
@@ -123,54 +102,41 @@ namespace TestCaseExport
             if (comBoxTestPlan.SelectedIndex >= 0)
             {
                 j = comBoxTestSuite.SelectedIndex;
-                this.suite = testSuites[j].TestSuite.TestSuiteEntry;
+                var suite = _testSuites[j].TestSuite.TestSuiteEntry;
                 var suite1 = suite.TestSuite;
-                Get_TestCases(suite1);
-                flag3 = 1;
+                LoadTestCases(suite1);
             }
         }
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            if (txtFileName.Text != null || txtFileName.Text != "")
-            {
-                flag5 = 1;
-            }
-            if (flag1 == 1 && flag2 == 1 && flag3 == 1 && flag4 == 1 && flag5 == 1)
-            {
-                this.Cursor = Cursors.WaitCursor;
-                btnExport.Enabled = false;
-                btnCancel.Enabled = false;
-                btnTeamProject.Enabled = false;
-                btnFolderBrowse.Enabled = false;
-                comBoxTestPlan.Enabled = false;
-                comBoxTestSuite.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            btnExport.Enabled = false;
+            btnCancel.Enabled = false;
+            btnTeamProject.Enabled = false;
+            btnFolderBrowse.Enabled = false;
+            comBoxTestPlan.Enabled = false;
+            comBoxTestSuite.Enabled = false;
 
-                var filename = Path.Combine(txtSaveFolder.Text, txtFileName.Text + ".xlsx");
-                Export(filename);
-                Process.Start(filename);
-                MessageBox.Show("Test Cases exported successfully to specified file.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            var filename = Path.Combine(txtSaveFolder.Text, txtFileName.Text + ".xlsx");
+            Export(filename);
+            Process.Start(filename);
+            MessageBox.Show("Test Cases exported successfully to specified file.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 
-                this.Cursor = Cursors.Arrow;
-                btnExport.Enabled = true;
-                btnCancel.Enabled = true;
-                btnTeamProject.Enabled = true;
-                btnFolderBrowse.Enabled = true;
-                comBoxTestPlan.Enabled = true;
-                comBoxTestSuite.Enabled = true;
+            this.Cursor = Cursors.Arrow;
+            btnExport.Enabled = true;
+            btnCancel.Enabled = true;
+            btnTeamProject.Enabled = true;
+            btnFolderBrowse.Enabled = true;
+            comBoxTestPlan.Enabled = true;
+            comBoxTestSuite.Enabled = true;
 
-                txtTeamProject.Text = "";
-                comBoxTestPlan.Items.Clear();
-                comBoxTestSuite.Items.Clear();
+            txtTeamProject.Text = "";
+            comBoxTestPlan.Items.Clear();
+            comBoxTestSuite.Items.Clear();
 
-                txtSaveFolder.Text = "";
-                txtFileName.Text = "";
-                flag1 = flag2 = flag3 = flag4 = flag5 = 0;
-            }
-            else
-            {
-                MessageBox.Show("All fields are not populated.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
+            txtSaveFolder.Text = "";
+            txtFileName.Text = "";
         }
 
         private void Export(string filename)
@@ -264,24 +230,6 @@ namespace TestCaseExport
             return input;
         }
 
-        private void releaseObject(object obj)
-        {
-            try
-            {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
-                obj = null;
-            }
-            catch (Exception ex)
-            {
-                obj = null;
-                MessageBox.Show("Unable to release the Object " + ex.ToString());
-            }
-            finally
-            {
-                GC.Collect();
-            }
-        }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -289,9 +237,7 @@ namespace TestCaseExport
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            FrmAbout frmAbout = new FrmAbout();
-            frmAbout.ShowDialog();
+            new FrmAbout().ShowDialog();
         }
-
     }
 }

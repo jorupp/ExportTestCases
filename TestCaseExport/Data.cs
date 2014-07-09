@@ -6,9 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Threading;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.TestManagement.Client;
 using TestCaseExport.Annotations;
+using TestCaseExport.Properties;
 
 namespace TestCaseExport
 {
@@ -129,6 +132,39 @@ namespace TestCaseExport
         public bool SuiteIsSelected
         {
             get { return null != _selectedTestSuite && !string.IsNullOrEmpty(ExportFileName); }
+        }
+
+        internal void SaveSettings(Settings settings)
+        {
+            settings.TfsUrl = SelectedProject.WitProject.Store.TeamProjectCollection.Uri.AbsoluteUri;
+            settings.ProjectName = SelectedProject.TeamProjectName;
+            settings.TestPlan = SelectedTestPlan.Name;
+            settings.TestSuite = SelectedTestSuite.Title;
+            settings.ExportFilename = ExportFileName;
+            settings.Save();
+        }
+
+        internal void LoadFromSettings(Settings settings)
+        {
+            if (string.IsNullOrEmpty(settings.TfsUrl) || string.IsNullOrEmpty(settings.ProjectName))
+                return;
+            var tfs = new TfsTeamProjectCollection(new Uri(settings.TfsUrl));
+            SelectedProject = tfs.GetService<ITestManagementService>().GetTeamProject(settings.ProjectName);
+
+            Application.DoEvents();
+
+            if (string.IsNullOrEmpty(settings.TestPlan))
+                return;
+
+            SelectedTestPlan = TestPlans.SingleOrDefault(i => i.Name == settings.TestPlan);
+
+            Application.DoEvents();
+
+            if (string.IsNullOrEmpty(settings.TestSuite))
+                return;
+
+            SelectedTestSuite = TestSuites.SingleOrDefault(i => i.Title == settings.TestSuite);
+            ExportFileName = settings.ExportFilename;
         }
 
         public class SelectableTestSuite

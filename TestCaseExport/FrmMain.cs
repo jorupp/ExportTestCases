@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.TestManagement.Client;
+using TestCaseExport.Properties;
 
 namespace TestCaseExport
 {
@@ -23,6 +24,19 @@ namespace TestCaseExport
             {
                 this.UseWaitCursor = isBusy;
             };
+
+            this.Load += async (sender, args) =>
+            {
+                return;
+                try
+                {
+                    _data.LoadFromSettings(Settings.Default);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading settings:" + Environment.NewLine + ex, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
         }
 
         private void btnTeamProject_Click(object sender, EventArgs e)
@@ -35,7 +49,7 @@ namespace TestCaseExport
             if (tpp.SelectedTeamProjectCollection != null)
             {
                 var tfs = tpp.SelectedTeamProjectCollection;
-                var tstSvc = (ITestManagementService)tfs.GetService(typeof(ITestManagementService));
+                var tstSvc = tfs.GetService<ITestManagementService>();
                 var teamProject = tstSvc.GetTeamProject(tpp.SelectedProjects[0].Name);
 
                 _data.SelectedProject = teamProject;
@@ -60,6 +74,8 @@ namespace TestCaseExport
                 var filename = _data.ExportFileName;
                 new Exporter().Export(filename, _data.SelectedTestSuite.TestSuite);
                 Process.Start(filename);
+
+                _data.SaveSettings(Settings.Default);
 
                 this.Cursor = Cursors.Default;
                 this.Enabled = true;

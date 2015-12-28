@@ -48,44 +48,95 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.TeamFoundation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.TeamFoundation.Client.12.0.21005.3\lib\net45\Microsoft.TeamFoundation.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.TeamFoundation.Common.12.0.30501.1\lib\net45\Microsoft.TeamFoundation.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Diff, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.TeamFoundation.Diff.12.0.30501.1\lib\net45\Microsoft.TeamFoundation.Diff.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Activities.Common">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Activities.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.ActivityRuntime">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.ActivityRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.TestManagement.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Client.Themes">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Client.Themes.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Client.WpfControls">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Client.WpfControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.ClientPackage">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.ClientPackage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.TestManagement.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Controller">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Controller.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Controls">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.ExploratoryTesting.Common">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.ExploratoryTesting.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.PcwPlugin">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.PcwPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.QuarterlyUpdate">
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.QuarterlyUpdate.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.TestManagement.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.TestManagement.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
-      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client.QueryLanguage, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Client.QueryLanguage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Controls, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.ControlsCore, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.ControlsCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Proxy, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Services.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.VisualStudio.Services.Client.12.0.21005.1\lib\net45\Microsoft.VisualStudio.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Services.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.VisualStudio.Services.Common.12.0.21005.1\lib\net45\Microsoft.VisualStudio.Services.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\nuget-bot.Microsoft.VisualStudio.Services.WebApi.12.0.21005.1\lib\net45\Microsoft.VisualStudio.Services.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

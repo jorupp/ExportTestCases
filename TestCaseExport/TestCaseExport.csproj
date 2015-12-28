@@ -107,8 +107,8 @@
       <HintPath>..\packages\Microsoft.TeamFoundation.WorkItemTracking.All.12.0.30723.2\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
-      <HintPath>..\packages\nuget-bot.microsoft.teamfoundation.workitemtracking.client.datastoreloader.12.0.31101\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_Libs\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client.QueryLanguage, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -215,7 +215,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Microsoft.WITDataStore.dll">
+    <Content Include="_Libs\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_Libs\Microsoft.WITDataStore.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
